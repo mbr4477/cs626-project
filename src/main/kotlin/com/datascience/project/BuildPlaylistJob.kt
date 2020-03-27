@@ -15,7 +15,7 @@ class BuildPlaylistJob : Configured(), Tool {
         FileInputFormat.addInputPath(job, Path(args[0]))
         FileOutputFormat.setOutputPath(job, Path(args[1]))
 
-//        job.mapperClass = TODO("Needs implemented")
+          job.mapperClass = Playlist_Mapper::class.java
 //        job.reducerClass = TODO("Needs implemented")
 //        job.outputKeyClass = TODO("Needs to be selected")
 //        job.outputValueClass = TODO("Needs to be selected")
