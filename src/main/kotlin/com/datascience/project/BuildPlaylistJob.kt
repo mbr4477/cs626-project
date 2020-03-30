@@ -2,6 +2,8 @@ package com.datascience.project
 
 import org.apache.hadoop.conf.Configured
 import org.apache.hadoop.fs.Path
+import org.apache.hadoop.io.NullWritable
+import org.apache.hadoop.io.Text
 import org.apache.hadoop.mapreduce.Job
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
@@ -16,9 +18,9 @@ class BuildPlaylistJob : Configured(), Tool {
         FileOutputFormat.setOutputPath(job, Path(args[1]))
 
 //        job.mapperClass = TODO("Needs implemented")
-//        job.reducerClass = TODO("Needs implemented")
-//        job.outputKeyClass = TODO("Needs to be selected")
-//        job.outputValueClass = TODO("Needs to be selected")
+        job.reducerClass = PlaylistReducer::class.java
+        job.outputKeyClass = Text::class.java
+        job.outputValueClass = NullWritable::class.java
 
         return if (job.waitForCompletion(true)) 0 else 1
     }
