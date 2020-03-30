@@ -2,6 +2,7 @@ package com.datascience.project
 
 import org.apache.hadoop.conf.Configured
 import org.apache.hadoop.fs.Path
+import org.apache.hadoop.io.IntWritable
 import org.apache.hadoop.io.NullWritable
 import org.apache.hadoop.io.Text
 import org.apache.hadoop.mapreduce.Job
@@ -19,8 +20,10 @@ class BuildPlaylistJob : Configured(), Tool {
 
 //        job.mapperClass = TODO("Needs implemented")
         job.reducerClass = PlaylistReducer::class.java
+        job.mapOutputKeyClass = Text::class.java
+        job.mapOutputValueClass = NullWritable::class.java
         job.outputKeyClass = Text::class.java
-        job.outputValueClass = NullWritable::class.java
+        job.outputValueClass = IntWritable::class.java
 
         return if (job.waitForCompletion(true)) 0 else 1
     }
