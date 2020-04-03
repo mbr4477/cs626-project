@@ -20,12 +20,13 @@ class Playlist_Mapper: Mapper<LongWritable, Text, NullWritable, Text>() {
         val lineStr = line.toString()
         val sortedLine = lineStr
             .split(',')
-            .sorted()
-            .joinToString(",")
+
+
+
         // write the sorted pair
         // this line writes to the map reduce context to provide
         // the intermediate outputs for the reducer
         // output the sorted key and 1
-        context.write(Text(sortedLine), IntWritable(1))
+        context.write(NullWritable.get(), Text(sortedLine[2]))
     }
 }
