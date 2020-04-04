@@ -22,7 +22,7 @@ class Playlist_Mapper: Mapper<LongWritable, Text, NullWritable, Text>() {
             .split(',')
         // Load the file as string of Tract, Artist, Playlist.
         // Split the string using a delimiter (,).
-        // Output the playlist name.
+        // Output the playlist name..
 
         context.write(NullWritable.get(), Text(sortedLine[2]))
     }
