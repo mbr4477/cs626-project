@@ -1,0 +1,5 @@
+** Use the Hadoop commandline below to run script**
+** Provide User input as a generic option in the commandline (eg -D userinput = "artiste name, trackname, keywords") separating each item with a comma**
+** Songs will be recommended based on the items matching the user inputs provided **
+
+hadoop jar spotifylist.jar org.myorg.SpotifyList -D userinput="Elvis Costello,(The Angels Wanna Wear My) Red Shoes,Rock and Roll" /user/cloudera/input /user/cloudera/output
