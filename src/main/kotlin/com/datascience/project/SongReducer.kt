@@ -11,6 +11,9 @@ import org.apache.hadoop.mapreduce.Reducer
 import java.util.*
 
 class SongReducer: Reducer<Text, FloatWritable, Text, FloatWritable>() {
+    companion object {
+        const val maxSongs = 30
+    }
     /**
      * key: song name
      * values: relevance weight (0 - 1)
@@ -19,14 +22,18 @@ class SongReducer: Reducer<Text, FloatWritable, Text, FloatWritable>() {
         // randomly pick this song based on relevance
         // use the max relevance if this song appears
         // more than once
-        var maxRelevance = 0.0f
-        for (r in values) {
-            if (r.get() > maxRelevance) {
-                maxRelevance = r.get()
+        val counter = context.getCounter(FindSongsJob.SONGS.COUNT)
+        if (counter.value < maxSongs) {
+            var maxRelevance = 0.0f
+            for (r in values) {
+                if (r.get() > maxRelevance) {
+                    maxRelevance = r.get()
+                }
             }
-        }
-        if (Random().nextDouble() < maxRelevance) {
-            context.write(key, FloatWritable(maxRelevance))
+            if (Random().nextDouble() < maxRelevance) {
+                context.write(key, FloatWritable(maxRelevance))
+                counter.increment(1)
+            }
         }
     }
 }

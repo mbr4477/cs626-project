@@ -29,7 +29,6 @@ class FindPlaylistsJob : Configured(), Tool {
         job.setJarByClass(this::class.java)
         FileInputFormat.addInputPath(job, Path(args[0] + "/data"))
         FileOutputFormat.setOutputPath(job, Path(args[1] + "/job1"))
-
         UserInput.keywords.addAll(args.slice(2 until args.size))
 
 //        job.mapperClass = TODO("Needs implemented")

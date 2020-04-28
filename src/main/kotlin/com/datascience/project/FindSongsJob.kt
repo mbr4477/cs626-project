@@ -19,7 +19,13 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
 import org.apache.hadoop.util.Tool
 
 class FindSongsJob : Configured(), Tool {
-    // boilerplate code for creating a map reduce job
+    // boilerplate code for creating a map reduce
+    companion object {
+        const val pairCountOutputName = "pairCount"
+    }
+    enum class SONGS {
+        COUNT
+    }
     override fun run(args: Array<out String>): Int {
         val job = Job.getInstance(conf, "BuildPlaylist")
         job.setJarByClass(this::class.java)
