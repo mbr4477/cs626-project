@@ -8,6 +8,7 @@
 package com.datascience.project
 
 import org.apache.hadoop.conf.Configured
+import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.FloatWritable
 import org.apache.hadoop.io.IntWritable
@@ -30,9 +31,11 @@ class FindSongsJob : Configured(), Tool {
         val job = Job.getInstance(conf, "BuildPlaylist")
         job.setJarByClass(this::class.java)
         FileInputFormat.addInputPath(job, Path(args[0] + "/job1"))
-        FileOutputFormat.setOutputPath(job, Path(args[1] + "/job2"))
+        FileOutputFormat.setOutputPath(job, Path(args[0] + "/job2"))
+        val fs = FileSystem.get(conf)
+        fs.delete(FileOutputFormat.getOutputPath(job), true)
 
-//        job.mapperClass = TODO("Needs implemented")
+        job.mapperClass = SongRelevanceMapper::class.java
         job.reducerClass = SongReducer::class.java
         job.mapOutputKeyClass = Text::class.java
         job.mapOutputValueClass = FloatWritable::class.java

@@ -7,6 +7,7 @@
 package com.datascience.project
 
 import org.apache.hadoop.conf.Configured
+import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.IntWritable
 import org.apache.hadoop.io.NullWritable
@@ -18,7 +19,9 @@ import org.apache.hadoop.util.Tool
 
 class UserInput {
     companion object {
-        val keywords = mutableListOf<String>()
+        var artist: String = ""
+        var track: String = ""
+        var keyword: String = ""
     }
 }
 
@@ -28,8 +31,13 @@ class FindPlaylistsJob : Configured(), Tool {
         val job = Job.getInstance(conf, "BuildPlaylist")
         job.setJarByClass(this::class.java)
         FileInputFormat.addInputPath(job, Path(args[0] + "/data"))
-        FileOutputFormat.setOutputPath(job, Path(args[1] + "/job1"))
-        UserInput.keywords.addAll(args.slice(2 until args.size))
+        FileOutputFormat.setOutputPath(job, Path(args[0] + "/job1"))
+        val fs = FileSystem.get(conf)
+        fs.delete(FileOutputFormat.getOutputPath(job), true)
+        val input = args[1].toLowerCase().split(',')
+        UserInput.artist = input[0]
+        UserInput.track = input[1]
+        UserInput.keyword = input[2]
 
 //        job.mapperClass = TODO("Needs implemented")
         job.reducerClass = PlaylistReducer::class.java

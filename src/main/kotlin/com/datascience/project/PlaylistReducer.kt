@@ -12,9 +12,9 @@ import org.apache.hadoop.mapreduce.Reducer
 
 class PlaylistReducer: Reducer<Text, NullWritable, Text, IntWritable>() {
     /**
-     * key: playlist name
-     * values: null (number of values = number of times that playlist
-     *         was considered a relevant match
+     * key: row of input data file
+     * values: null (number of values = number of times the row
+     *         was considered a relevant match)
      */
     override fun reduce(key: Text, values: MutableIterable<NullWritable>, context: Context) {
         // simply pass along the playlist names and counts
