@@ -19,6 +19,7 @@ import org.apache.hadoop.util.Tool
 
 class UserInput {
     companion object {
+        @JvmField        
         var artist: String = ""
         var track: String = ""
         var keyword: String = ""
