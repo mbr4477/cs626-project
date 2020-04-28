@@ -1,3 +1,6 @@
+/**
+ * Author: Matthew Russell
+ */
 package com.datascience.project
 
 import org.apache.hadoop.io.FloatWritable
