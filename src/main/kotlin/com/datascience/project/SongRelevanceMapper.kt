@@ -15,23 +15,26 @@ class SongRelevanceMapper: Mapper<LongWritable, Text, Text, FloatWritable>() {
      */
     override fun map(key: LongWritable, line: Text, context: Context) {
         val lineStr = line.toString()
-        val parts = lineStr.split(',')
-        val artist = parts[0].toLowerCase()
-        val track = parts[1].toLowerCase()
-        val playlist = parts[2].toLowerCase()
-        val artistMatches = UserInput.artist.contains(artist) || artist.contains(UserInput.artist)
-        val playlistMatches = UserInput.keyword.contains(playlist) || playlist.contains(UserInput.keyword)
-        val trackMatches = UserInput.track.contains(track) || artist.contains(UserInput.track)
-        var relevance = 0.0f
-        if (artistMatches) {
-            relevance += 1 / 3f
+        val parts = lineStr.split("\",\"")
+        try {
+            val playlist = parts[3].toLowerCase().trim('"')
+            val artist = parts[1].toLowerCase().trim('"')
+            val track = parts[2].toLowerCase().trim('"')
+            if (Playlists.names.contains(playlist) && track.isNotEmpty() && artist.isNotEmpty()) {
+                val artistMatches = UserInput.artist.contains(artist) || artist.contains(UserInput.artist)
+                val trackMatches = UserInput.track.contains(track) || track.contains(UserInput.track)
+                var relevance = 0.5f
+                if (artistMatches) {
+                    relevance += 0.25f
+                }
+                if (trackMatches) {
+                    relevance += 0.25f
+                }
+                context.write(Text("\"$artist\",\"$track\""), FloatWritable(relevance))
+            }
+        } catch (e: Exception) {
+            // skip if an error
         }
-        if (playlistMatches) {
-            relevance += 1 / 3f
-        }
-        if (trackMatches) {
-            relevance += 1 / 3f
-        }
-        context.write(Text("$artist,$track"), FloatWritable(relevance))
+
     }
 }
