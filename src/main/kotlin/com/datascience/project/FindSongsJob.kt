@@ -20,21 +20,23 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
 import org.apache.hadoop.util.Tool
 
 class FindSongsJob : Configured(), Tool {
-    // boilerplate code for creating a map reduce
-    companion object {
-        const val pairCountOutputName = "pairCount"
-    }
     enum class SONGS {
         COUNT
     }
     override fun run(args: Array<out String>): Int {
         val job = Job.getInstance(conf, "BuildPlaylist")
         job.setJarByClass(this::class.java)
-        FileInputFormat.addInputPath(job, Path(args[0] + "/job1"))
+        FileInputFormat.addInputPath(job, Path(args[0] + "/data"))
         FileOutputFormat.setOutputPath(job, Path(args[0] + "/job2"))
         val fs = FileSystem.get(conf)
         fs.delete(FileOutputFormat.getOutputPath(job), true)
 
+        // read the playlists from the first job output
+        val playlistPath = Path(args[0] + "/job1/part-r-00000")
+        val playlistFile = fs.open(playlistPath)
+        Playlists.names.addAll(playlistFile.bufferedReader().readLines())
+        println(Playlists.names)
+        playlistFile.close()
         job.mapperClass = SongRelevanceMapper::class.java
         job.reducerClass = SongReducer::class.java
         job.mapOutputKeyClass = Text::class.java
