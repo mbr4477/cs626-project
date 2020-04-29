@@ -36,10 +36,7 @@ import org.apache.log4j.Logger;
     String input = userinput.toLowerCase();
     String spotifyItem = spotifyinput.toLowerCase();
 
-    if (spotifyItem.matches(".*" + input + ".*")) {
-    return true;
-    }
-    return false;
+    return spotifyItem.matches(".*" + input + ".*");
 }
     public void map(LongWritable offset, Text lineText, Context context)
         throws IOException, InterruptedException {
@@ -55,12 +52,9 @@ import org.apache.log4j.Logger;
       //boolean isFound = playlistnames.indexOf(userKeyWord) !=-1? true: false;
       }
         
-          if (checkUserInputExistence(userArtistName, artistname) || checkUserInputExistence(userTrackName, trackname)){
-              context.write(new Text(artistname), new Text (trackname));
+          if (checkUserInputExistence(userArtistName, artistname) || checkUserInputExistence(userTrackName, trackname) || checkUserInputExistence(userKeyWord, playlistname)){
+              context.write(new Text(playlistname), new Text(artistname + "," + trackname));
         }
 
-         if ( checkUserInputExistence(userKeyWord, playlistname)){
-             context.write(new Text(artistname), new Text (trackname));
-       }
     }
   }
